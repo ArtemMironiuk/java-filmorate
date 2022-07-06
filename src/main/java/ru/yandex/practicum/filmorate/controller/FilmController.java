@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/films")
+@Slf4j
 public class FilmController {
 
     private final HashMap<Integer, Film> mapFilms = new HashMap<>();
@@ -22,6 +24,7 @@ public class FilmController {
 
     @PostMapping("/film")
     public Film createFilm(@RequestBody Film film){
+        log.info("Получен запрос к эндпоинту: POST,http://localhost:8080/films/film");
         if (!film.getName().isBlank()) {
             if (film.getDescription().length() <= 200) {
                 if (film.getReleaseDate().isBefore(LocalDate.of(1895,12,28))){
@@ -44,7 +47,12 @@ public class FilmController {
 
     @PutMapping("/film")
     public Film updateFilm(@RequestBody Film film){
-
+        log.info("Получен запрос к эндпоинту: PUT,http://localhost:8080/films/film");
+        if (film.getId() != 0 && mapFilms.containsKey(film.getId())) {
+            mapFilms.put(film.getId(), film);
+        } else {
+            throw new ValidationException("id фильма равен нулю или такого фильма нет в списке.");
+        }
         return film;
     }
 }
