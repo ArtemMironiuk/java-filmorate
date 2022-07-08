@@ -17,7 +17,7 @@ import java.util.List;
 public class FilmController {
 
     private final HashMap<Integer, Film> mapFilms = new HashMap<>();
-    protected int id = 1;
+    private int id = 1;
 
     @GetMapping
     public List<Film> filmsAll(){
@@ -28,8 +28,7 @@ public class FilmController {
     public Film createFilm(@Valid @RequestBody Film film){
         log.info("Получен запрос к эндпоинту: POST,http://localhost:8080/films");
         validate(film);
-        film.setId(id);
-        id++;
+        film.setId(id++);
         mapFilms.put(film.getId(), film);
         return film;
     }
@@ -37,6 +36,7 @@ public class FilmController {
     @PutMapping
     public Film updateFilm(@RequestBody Film film){
         log.info("Получен запрос к эндпоинту: PUT,http://localhost:8080/films");
+        validate(film);
         if (film.getId() != 0 && mapFilms.containsKey(film.getId())) {
             mapFilms.put(film.getId(), film);
         } else {
@@ -45,7 +45,7 @@ public class FilmController {
         return film;
     }
 
-    protected void validate(Film film) {
+    public void validate(Film film) {
         if (film.getName().isBlank()) {
             throw new ValidationException("Название фильма не может быть пустым.");
         } else if (film.getDescription().length() > 200) {

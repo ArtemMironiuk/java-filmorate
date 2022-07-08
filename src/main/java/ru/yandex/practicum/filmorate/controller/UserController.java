@@ -16,10 +16,11 @@ import java.util.List;
 @Slf4j
 public class UserController {
     private final HashMap<Integer, User> mapUsers = new HashMap<>();
-    protected Integer id = 1;
+    private Integer id = 1;
 
     @GetMapping
     public List<User> usersAll(){
+        log.info("Получен запрос к эндпоинту: GET,http://localhost:8080/users");
         return new ArrayList<>(mapUsers.values());
     }
 
@@ -27,15 +28,15 @@ public class UserController {
     public User createUser(@Valid @RequestBody User user){
         log.info("Получен запрос к эндпоинту: POST,http://localhost:8080/users");
         validate(user);
-        user.setId(id);
-        id++;
+        user.setId(id++);
         mapUsers.put(user.getId(), user);
         return user;
     }
 
     @PutMapping
-    public User updateUser(@RequestBody User user){
+    public User updateUser(@Valid @RequestBody User user){
         log.info("Получен запрос к эндпоинту: PUT,http://localhost:8080/users");
+        validate(user);
         if (user.getId() != null && mapUsers.containsKey(user.getId())) {
             mapUsers.put(user.getId(), user);
         } else {
@@ -44,12 +45,12 @@ public class UserController {
         return user;
     }
 
-    protected void validate(User user) {
+    public void validate(User user) {
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             throw new ValidationException("Email пуст или отсутствует символ @.");
-        } else if (user.getLogin().isBlank() || user.getLogin().contains(" ")) {
+        } else if (user.getLogin().isBlank()) {
             throw new ValidationException("Пожалуйста укажите логин или уберите пробел.");
-        } else if (user.getBirthdate().isAfter(LocalDate.now())) {
+        } else if (user.getBirthday().isAfter(LocalDate.now())) {
             throw new ValidationException("Дата рождения пользователя указана в будущем времени.");
         } else if (user.getName().equals("")) {
             user.setName(user.getLogin());
