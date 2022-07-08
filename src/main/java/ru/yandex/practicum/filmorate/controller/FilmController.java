@@ -21,6 +21,7 @@ public class FilmController {
 
     @GetMapping
     public List<Film> filmsAll(){
+        log.info("Получен запрос к эндпоинту: GET,http://localhost:8080/films");
         return new ArrayList<>(mapFilms.values());
     }
 
@@ -37,6 +38,9 @@ public class FilmController {
     public Film updateFilm(@RequestBody Film film){
         log.info("Получен запрос к эндпоинту: PUT,http://localhost:8080/films");
         validate(film);
+        if (film.getId() <= 0) {
+            throw new ValidationException("id отрицательный");
+        }
         if (film.getId() != 0 && mapFilms.containsKey(film.getId())) {
             mapFilms.put(film.getId(), film);
         } else {

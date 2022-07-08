@@ -37,6 +37,9 @@ public class UserController {
     public User updateUser(@Valid @RequestBody User user){
         log.info("Получен запрос к эндпоинту: PUT,http://localhost:8080/users");
         validate(user);
+        if (user.getId() <= 0) {
+            throw new ValidationException("id отрицательный");
+        }
         if (user.getId() != null && mapUsers.containsKey(user.getId())) {
             mapUsers.put(user.getId(), user);
         } else {
