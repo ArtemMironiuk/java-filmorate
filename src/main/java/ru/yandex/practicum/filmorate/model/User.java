@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 public class User {
 
-    private Integer id;
+    private Long id;
     @NotEmpty
     @Email
     private String email;
