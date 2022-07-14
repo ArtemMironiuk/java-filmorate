@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface StorageUser {
 
-    List<User> getUser();
+    List<User> getUsers();
 
     User createUser(User user);
 

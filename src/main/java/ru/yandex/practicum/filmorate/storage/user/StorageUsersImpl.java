@@ -18,7 +18,7 @@ public class StorageUsersImpl implements StorageUser{
 
     private Long id = 1L;
 
-    public List<User> getUser(){
+    public List<User> getUsers(){
         return new ArrayList<>(mapUsers.values());
     }
 
@@ -53,5 +53,15 @@ public class StorageUsersImpl implements StorageUser{
         } else if (user.getName().equals("")) {
             user.setName(user.getLogin());
         }
+    }
+
+    public void addFriend(User user, User friend) {
+        user.getFriendIds().add(friend.getId());
+        friend.getFriendIds().add(user.getId());
+    }
+
+    public void deleteFriend(User user, User friend) {
+        user.getFriendIds().remove(friend.getId());
+        friend.getFriendIds().remove(user.getId());
     }
 }
