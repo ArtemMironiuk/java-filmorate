@@ -11,4 +11,6 @@ public interface StorageUser {
     User createUser(User user);
 
     User updateUser(User user);
+
+    User getUserId(Long id);
 }

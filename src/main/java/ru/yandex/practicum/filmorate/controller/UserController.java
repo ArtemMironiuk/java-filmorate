@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.server.RequestPath;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -19,17 +21,23 @@ import java.util.List;
 public class UserController {
 
     private StorageUser storageUser;
-
     private UserService userService;
 
-    public UserController(StorageUser storageUser) {
+    public UserController(StorageUser storageUser, UserService userService) {
         this.storageUser = storageUser;
+        this.userService = userService;
     }
 
     @GetMapping
     public List<User> usersAll(){
         log.info("Получен запрос к эндпоинту: GET,http://localhost:8080/users");
         return storageUser.getUsers();
+    }
+
+    @GetMapping("/{id}")
+    public User user(@PathVariable Long id){
+        log.info("Получен запрос к эндпоинту: GET,http://localhost:8080/users/{id}");
+        return storageUser.getUserId(id);
     }
 
     @PostMapping

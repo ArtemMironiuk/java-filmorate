@@ -17,6 +17,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
@@ -37,7 +38,7 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new User(1L,"email@email.ru","login","admin", LocalDate.of(1995,06,8)))))
+                        .content(objectMapper.writeValueAsString(new User(1L,"email@email.ru","login","admin", LocalDate.of(1995,06,8),new HashSet<>()))))
                 .andExpect(status().isOk());
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -52,7 +53,7 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new User(1L,"email@mail.ru","login","admin", LocalDate.of(1995,06,8)))))
+                        .content(objectMapper.writeValueAsString(new User(1L,"email@mail.ru","login","admin", LocalDate.of(1995,06,8),new HashSet<>()))))
                 .andExpect(status().isOk());
     }
 
@@ -61,7 +62,7 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new User(1L,"email@email.ru","","admin", LocalDate.of(1995,06,8)))))
+                        .content(objectMapper.writeValueAsString(new User(1L,"email@email.ru","","admin", LocalDate.of(1995,06,8),new HashSet<>()))))
                 .andExpect(status().isBadRequest());
     }
 
@@ -70,7 +71,7 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new User(1L,"email.email.ru","login","admin", LocalDate.of(1995,06,8)))))
+                        .content(objectMapper.writeValueAsString(new User(1L,"email.email.ru","login","admin", LocalDate.of(1995,06,8),new HashSet<>()))))
                 .andExpect(status().isBadRequest());
     }
 
@@ -79,7 +80,7 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new User(1L,"email@email.ru","login","", LocalDate.of(1995,06,8)))))
+                        .content(objectMapper.writeValueAsString(new User(1L,"email@email.ru","login","", LocalDate.of(1995,06,8),new HashSet<>()))))
                 .andExpect(status().isOk());
     }
 
@@ -88,7 +89,7 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new User(1L,"email.email.ru","login","admin", LocalDate.of(2023,06,8)))))
+                        .content(objectMapper.writeValueAsString(new User(1L,"email.email.ru","login","admin", LocalDate.of(2023,06,8),new HashSet<>()))))
                 .andExpect(status().isBadRequest());
     }
 }

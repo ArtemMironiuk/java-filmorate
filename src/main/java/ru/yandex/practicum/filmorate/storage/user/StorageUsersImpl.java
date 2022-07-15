@@ -22,6 +22,14 @@ public class StorageUsersImpl implements StorageUser{
         return new ArrayList<>(mapUsers.values());
     }
 
+    public User getUserId(Long id){
+        if (mapUsers.containsKey(id)) {
+            return mapUsers.get(id);
+        } else {
+            throw new ValidationException("Пользователь с id = " + id + " не существует.");
+        }
+    }
+
     public User createUser(User user){
         validate(user);
         user.setId(id++);

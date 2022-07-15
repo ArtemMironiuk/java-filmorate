@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -29,7 +30,7 @@ class FilmControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new Film(0L,"название","Описание", LocalDate.of(1899,05,8), 50))))
+                        .content(objectMapper.writeValueAsString(new Film(0L,"название","Описание", LocalDate.of(1899,05,8), 50,new HashSet<>()))))
                 .andExpect(status().isOk());
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -44,7 +45,7 @@ class FilmControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new Film(0L,"название","Описание", LocalDate.of(1899,05,8), 50))))
+                        .content(objectMapper.writeValueAsString(new Film(0L,"название","Описание", LocalDate.of(1899,05,8), 50,new HashSet<>()))))
                 .andExpect(status().isOk());
     }
 
@@ -53,7 +54,7 @@ class FilmControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/films")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new Film(0L,"","Описание", LocalDate.of(1893,05,8), 50))))
+                .content(objectMapper.writeValueAsString(new Film(0L,"","Описание", LocalDate.of(1893,05,8), 50,new HashSet<>()))))
                 .andExpect(status().isBadRequest());
     }
 
@@ -71,7 +72,7 @@ class FilmControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new Film(0L,"Один дома","Описание", LocalDate.of(1896,05,8), -50))))
+                        .content(objectMapper.writeValueAsString(new Film(0L,"Один дома","Описание", LocalDate.of(1896,05,8), -50,new HashSet<>()))))
                 .andExpect(status().isBadRequest());
     }
 
