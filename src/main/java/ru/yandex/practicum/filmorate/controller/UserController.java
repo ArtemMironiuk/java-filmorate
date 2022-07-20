@@ -1,18 +1,12 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.server.RequestPath;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.user.StorageUser;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -53,12 +47,22 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/friends/{friendId}")
-    public void addFriend(@PathVariable int userId, @PathVariable int friendId) {
+    public void addFriend(@PathVariable Long userId, @PathVariable Long friendId) {
         userService.addFriend(userId,friendId);
     }
 
     @DeleteMapping("/{userId}/friends/{friendId}")
-    public void deleteFriend(@PathVariable int userId, @PathVariable int friendId) {
+    public void deleteFriend(@PathVariable Long userId, @PathVariable Long friendId) {
         userService.deleteFriend(userId,friendId);
+    }
+
+    @GetMapping("/{id}/friends")
+    public void getFriends(@PathVariable Long id) {
+        userService.getFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public void getMutualFriends(@PathVariable Long id, @PathVariable Long otherId) {
+        userService.getMutualFriends(id,otherId);
     }
 }

@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -26,7 +27,7 @@ public class StorageUsersImpl implements StorageUser{
         if (mapUsers.containsKey(id)) {
             return mapUsers.get(id);
         } else {
-            throw new ValidationException("Пользователь с id = " + id + " не существует.");
+            throw new ObjectNotFoundException("Пользователь с id = " + id + " не существует.");
         }
     }
 
@@ -46,7 +47,7 @@ public class StorageUsersImpl implements StorageUser{
             mapUsers.put(user.getId(), user);
             log.debug("User c id = " + user.getId() + " обновлен.");
         } else {
-            throw new ValidationException("id пользователя не указан или не существует в списке.");
+            throw new ObjectNotFoundException("id пользователя не указан или не существует в списке.");
         }
         return user;
     }
@@ -61,15 +62,5 @@ public class StorageUsersImpl implements StorageUser{
         } else if (user.getName().equals("")) {
             user.setName(user.getLogin());
         }
-    }
-
-    public void addFriend(User user, User friend) {
-        user.getFriendIds().add(friend.getId());
-        friend.getFriendIds().add(user.getId());
-    }
-
-    public void deleteFriend(User user, User friend) {
-        user.getFriendIds().remove(friend.getId());
-        friend.getFriendIds().remove(user.getId());
     }
 }
