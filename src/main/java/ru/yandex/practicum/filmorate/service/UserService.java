@@ -20,23 +20,45 @@ public class UserService {
     }
 
 
+    /**
+     * Добавление в друзья.
+     * @param userId
+     * @param friendId
+     */
     public void addFriend(Long userId, Long friendId) {
+        if (userId <= 0 || friendId <= 0) {
+            throw new ObjectNotFoundException("id пользователя или id друга указаны не верно. id должен быть больше 0");
+        }
         User user = storageUser.getUserId(userId);
         User friend = storageUser.getUserId(friendId);
         user.getFriendIds().add(friend.getId());
         friend.getFriendIds().add(user.getId());
-        //TODO check userId and friendId
     }
 
+    /**
+     * Удаление из друзей.
+     * @param userId
+     * @param friendId
+     */
     public void deleteFriend(Long userId, Long friendId) {
+        if (userId <= 0 || friendId <= 0) {
+            throw new ObjectNotFoundException("id пользователя или id друга указаны не верно. id должен быть больше 0");
+        }
         User user = storageUser.getUserId(userId);
         User friend = storageUser.getUserId(friendId);
         user.getFriendIds().remove(friend.getId());
         friend.getFriendIds().remove(user.getId());
-//        //TODO check userId and friendId
     }
 
+    /**
+     * Получение списка пользователей, являющихся его друзьями
+     * @param id
+     * @return
+     */
     public List<User> getFriends(Long id) {
+        if (id <= 0) {
+            throw new ObjectNotFoundException("id пользователя указан не верно. id должен быть больше 0");
+        }
         User user = storageUser.getUserId(id);
         Set<Long> friends = user.getFriendIds();
         if(friends.isEmpty()) {
@@ -49,7 +71,16 @@ public class UserService {
         return users;
     }
 
+    /**
+     * Получение списка друзей, общих с другим пользователем.
+     * @param id
+     * @param otherId
+     * @return
+     */
     public List<User> getMutualFriends(Long id, Long otherId) {
+        if (id <= 0 || otherId <= 0) {
+            throw new ObjectNotFoundException("id должен быть больше 0");
+        }
         User user = storageUser.getUserId(id);
         User otherUser = storageUser.getUserId(otherId);
         Set<Long> listFriendsUser;
@@ -62,9 +93,6 @@ public class UserService {
         }
         Set<Long> listMutualFriends = new HashSet<>(listFriendsUser);
         listMutualFriends.retainAll(listFriendsOtherUser);
-        if (listMutualFriends.isEmpty()) {
-            throw new ObjectNotFoundException("общих друзей нет");
-        }
         List<User> users = new ArrayList<>();
         for (Long friend : listMutualFriends) {
             users.add(storageUser.getUserId(friend));

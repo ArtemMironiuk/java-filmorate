@@ -41,7 +41,7 @@ public class StorageUsersImpl implements StorageUser{
 
     public User updateUser(User user){
         if (user.getId() <= 0) {
-            throw new ValidationException("id отрицательный");
+            throw new ObjectNotFoundException("id отрицательный");
         }
         if (user.getId() != null && mapUsers.containsKey(user.getId())) {
             mapUsers.put(user.getId(), user);

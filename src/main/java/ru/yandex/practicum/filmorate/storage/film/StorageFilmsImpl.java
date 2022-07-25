@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -26,7 +27,7 @@ public class StorageFilmsImpl implements StorageFilm {
         if (mapFilms.containsKey(id)) {
             return mapFilms.get(id);
         } else {
-            throw new ValidationException("Фильм с id = " + id + " не существует.");
+            throw new ObjectNotFoundException("Фильм с id = " + id + " не существует.");
         }
     }
 
@@ -40,13 +41,13 @@ public class StorageFilmsImpl implements StorageFilm {
 
     public Film updateFilm(Film film){
         if (film.getId() <= 0) {
-            throw new ValidationException("id отрицательный");
+            throw new ObjectNotFoundException("id отрицательный");
         }
         if (film.getId() != 0 && mapFilms.containsKey(film.getId())) {
             mapFilms.put(film.getId(), film);
             log.debug("Film c id = " + film.getId() + " обновлен.");
         } else {
-            throw new ValidationException("id фильма равен нулю или такого фильма нет в списке.");
+            throw new ObjectNotFoundException("id фильма равен нулю или такого фильма нет в списке.");
         }
         return film;
     }
