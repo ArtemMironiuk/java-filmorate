@@ -2,10 +2,8 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ public class StorageFilmsImpl implements StorageFilm {
         return new ArrayList<>(mapFilms.values());
     }
 
-    public Film getFilmId(Integer id){
+    public Film getFilmId(Long id){
         if (mapFilms.containsKey(id)) {
             return mapFilms.get(id);
         } else {
@@ -52,17 +50,6 @@ public class StorageFilmsImpl implements StorageFilm {
         }
         return film;
     }
-
-    public void addLike(Film film, User user) {
-//        user.getFriendIds().add(friend.getId());
-//        friend.getFriendIds().add(user.getId());
-    }
-
-    public void deleteLike(Film film, User user) {
-//        user.getFriendIds().remove(friend.getId());
-//        friend.getFriendIds().remove(user.getId());
-    }
-
 
     private void validate(Film film) {
         if (film.getName().isBlank()) {

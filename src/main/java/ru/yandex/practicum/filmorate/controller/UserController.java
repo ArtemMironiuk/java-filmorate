@@ -14,8 +14,8 @@ import java.util.List;
 @Slf4j
 public class UserController {
 
-    private StorageUser storageUser;
-    private UserService userService;
+    private final StorageUser storageUser;
+    private final UserService userService;
 
     public UserController(StorageUser storageUser, UserService userService) {
         this.storageUser = storageUser;
