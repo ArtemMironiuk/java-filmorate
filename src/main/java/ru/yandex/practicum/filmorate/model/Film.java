@@ -24,5 +24,5 @@ public class Film {
     @Positive
     private int duration;
     @JsonIgnore
-    Set<Long> userIds = new HashSet<>();
+    private Set<Long> userIds = new HashSet<>();
 }

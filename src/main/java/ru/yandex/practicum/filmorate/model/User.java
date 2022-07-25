@@ -30,6 +30,6 @@ public class User {
     @Past
     private LocalDate birthday;
     @JsonIgnore
-    Set<Long> friendIds = new HashSet<>();
+    private Set<Long> friendIds = new HashSet<>();
 
 }

@@ -19,7 +19,7 @@ public class StorageFilmsImpl implements StorageFilm {
 
     private Long id = 1L;
 
-    public List<Film> getFilms(){
+    public List<Film> getFilms() {
         return new ArrayList<>(mapFilms.values());
     }
 

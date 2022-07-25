@@ -1,25 +1,41 @@
 package ru.yandex.practicum.filmorate.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.StorageUser;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
-    StorageUser storageUser;
+    private final StorageUser storageUser;
 
+    @Autowired
     public UserService(StorageUser storageUser) {
         this.storageUser = storageUser;
     }
 
+    public List<User> getUsers() {
+        return storageUser.getUsers();
+    }
 
+    public User getUserId(Long id) {
+        return storageUser.getUserId(id);
+    }
+
+    public User createUser(User user) {
+        return storageUser.createUser(user);
+    }
+
+    public User updateUser(User user) {
+        return storageUser.updateUser(user);
+    }
     /**
      * Добавление в друзья.
      * @param userId
@@ -81,22 +97,15 @@ public class UserService {
         if (id <= 0 || otherId <= 0) {
             throw new ObjectNotFoundException("id должен быть больше 0");
         }
-        User user = storageUser.getUserId(id);
-        User otherUser = storageUser.getUserId(otherId);
-        Set<Long> listFriendsUser;
-        Set<Long> listFriendsOtherUser;
-        if (user.getFriendIds() != null && otherUser.getFriendIds() != null) {
-            listFriendsUser = user.getFriendIds();
-            listFriendsOtherUser = otherUser.getFriendIds();
-        } else {
-            throw new ObjectNotFoundException("у одного из пользователей список друзей пуст");
-        }
-        Set<Long> listMutualFriends = new HashSet<>(listFriendsUser);
-        listMutualFriends.retainAll(listFriendsOtherUser);
-        List<User> users = new ArrayList<>();
-        for (Long friend : listMutualFriends) {
-            users.add(storageUser.getUserId(friend));
-        }
-        return users;
+        final User user = storageUser.getUserId(id);
+        final User otherUser = storageUser.getUserId(otherId);
+        final Set<Long> friends = user.getFriendIds();
+        final Set<Long> otherFriends = otherUser.getFriendIds();
+
+        return friends.stream()
+                .filter(otherFriends::contains)
+                .map(userId -> storageUser.getUserId(userId) )
+                .collect(Collectors.toList());
+
     }
 }

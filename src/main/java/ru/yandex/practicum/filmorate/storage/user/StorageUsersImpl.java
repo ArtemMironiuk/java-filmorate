@@ -19,11 +19,11 @@ public class StorageUsersImpl implements StorageUser{
 
     private Long id = 1L;
 
-    public List<User> getUsers(){
+    public List<User> getUsers() {
         return new ArrayList<>(mapUsers.values());
     }
 
-    public User getUserId(Long id){
+    public User getUserId(Long id) {
         if (mapUsers.containsKey(id)) {
             return mapUsers.get(id);
         } else {
@@ -31,7 +31,7 @@ public class StorageUsersImpl implements StorageUser{
         }
     }
 
-    public User createUser(User user){
+    public User createUser(User user) {
         validate(user);
         user.setId(id++);
         mapUsers.put(user.getId(), user);
@@ -39,7 +39,7 @@ public class StorageUsersImpl implements StorageUser{
         return user;
     }
 
-    public User updateUser(User user){
+    public User updateUser(User user) {
         if (user.getId() <= 0) {
             throw new ObjectNotFoundException("id отрицательный");
         }
