@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -18,11 +19,19 @@ public class StorageUsersImpl implements StorageUser{
 
     private Long id = 1L;
 
-    public List<User> getUser(){
+    public List<User> getUsers() {
         return new ArrayList<>(mapUsers.values());
     }
 
-    public User createUser(User user){
+    public User getUserId(Long id) {
+        if (mapUsers.containsKey(id)) {
+            return mapUsers.get(id);
+        } else {
+            throw new ObjectNotFoundException("Пользователь с id = " + id + " не существует.");
+        }
+    }
+
+    public User createUser(User user) {
         validate(user);
         user.setId(id++);
         mapUsers.put(user.getId(), user);
@@ -30,15 +39,15 @@ public class StorageUsersImpl implements StorageUser{
         return user;
     }
 
-    public User updateUser(User user){
+    public User updateUser(User user) {
         if (user.getId() <= 0) {
-            throw new ValidationException("id отрицательный");
+            throw new ObjectNotFoundException("id отрицательный");
         }
         if (user.getId() != null && mapUsers.containsKey(user.getId())) {
             mapUsers.put(user.getId(), user);
             log.debug("User c id = " + user.getId() + " обновлен.");
         } else {
-            throw new ValidationException("id пользователя не указан или не существует в списке.");
+            throw new ObjectNotFoundException("id пользователя не указан или не существует в списке.");
         }
         return user;
     }
