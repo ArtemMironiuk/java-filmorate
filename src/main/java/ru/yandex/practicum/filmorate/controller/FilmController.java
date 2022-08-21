@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
@@ -27,12 +29,18 @@ public class FilmController {
 
     @GetMapping("/{id}")
     public Film film(@PathVariable Long id) {
+        if (id == null || id < 0) {
+            throw new ObjectNotFoundException("не указан id");
+        }
         log.info("Получен запрос к эндпоинту: GET,http://localhost:8080/films/{id}");
         return filmService.getFilmId(id);
     }
 
     @PostMapping
     public Film createFilm(@Valid @RequestBody Film film) {
+        if (film.getMpa() == null) {
+            throw new ValidationException("проверьте все поля");
+        }
         log.info("Получен запрос к эндпоинту: POST,http://localhost:8080/films");
         return filmService.createFilm(film);
     }

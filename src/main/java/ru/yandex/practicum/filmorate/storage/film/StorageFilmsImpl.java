@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.dao.StorageFilm;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,6 +30,11 @@ public class StorageFilmsImpl implements StorageFilm {
         } else {
             throw new ObjectNotFoundException("Фильм с id = " + id + " не существует.");
         }
+    }
+
+    @Override
+    public List<Film> getPopularFilms(Integer count) {
+        return null;
     }
 
     public Film createFilm(Film film) {

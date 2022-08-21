@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.dao.StorageUser;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class StorageUsersImpl implements StorageUser{
+public class StorageUsersImpl implements StorageUser {
 
     private final HashMap<Long, User> mapUsers = new HashMap<>();
 
@@ -35,7 +36,7 @@ public class StorageUsersImpl implements StorageUser{
         validate(user);
         user.setId(id++);
         mapUsers.put(user.getId(), user);
-        log.debug("User c id = " + user.getId() + " создан.");
+        log.debug("User c id = " + user.getName() + " создан.");
         return user;
     }
 
