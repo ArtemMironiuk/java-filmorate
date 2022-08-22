@@ -15,6 +15,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
@@ -79,6 +81,34 @@ public class UserDbStorage implements StorageUser {
         }
         log.info("Найден пользователь: {}", user);
         return user;
+    }
+
+    @Override
+    public List<User> getFriends(Long id) {
+        List<User> friends = jdbcTemplate.query("select U.USER_ID, U.USER_NAME, U.LOGIN, U.EMAIL, U.BIRTHDAY " +
+                        "FROM FRIENDS AS F INNER JOIN USERS AS U ON F.FRIEND_ID = U.USER_ID WHERE F.USER_ID = ?",
+                UserDbStorage::makeUser,id);
+        return friends;
+    }
+
+    @Override
+    public List<User> getMutualFriends(Long id, Long otherId) {
+        List<Integer> friendsId = jdbcTemplate.queryForList("select FRIEND_ID from FRIENDS where USER_ID = ?",
+                Integer.class, id);
+        List<Integer> otherFriendsId = jdbcTemplate.queryForList("select FRIEND_ID from FRIENDS where USER_ID = ?",
+                Integer.class ,otherId);
+        List<User> users = new ArrayList<>();
+        List<Integer> mutualFriends = new LinkedList<>();
+        mutualFriends.addAll(friendsId);
+        mutualFriends.retainAll(otherFriendsId);
+        if(mutualFriends.isEmpty()) {
+            return users;
+        }
+        for (Integer integer: mutualFriends) {
+            users.add(getUserId(Long.valueOf(integer)));
+        }
+        return users;
+
     }
 
     static User makeUser (ResultSet rs,int rowNum) throws SQLException {

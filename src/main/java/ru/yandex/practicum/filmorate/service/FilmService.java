@@ -1,12 +1,11 @@
 package ru.yandex.practicum.filmorate.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.dao.LikeDao;
-import ru.yandex.practicum.filmorate.storage.dao.StorageFilm;
-import ru.yandex.practicum.filmorate.storage.dao.StorageUser;
+import ru.yandex.practicum.filmorate.storage.dao.*;
 
 import java.util.List;
 
@@ -14,14 +13,12 @@ import java.util.List;
 public class FilmService {
 
     private LikeDao likeDao;
-    private final StorageUser storageUser;
     private final StorageFilm storageFilm;
 
-//    @Autowired
+    @Autowired
     public FilmService(LikeDao likeDao, @Qualifier("userDbStorage") StorageUser storageUser,
                        @Qualifier("filmDbStorage") StorageFilm storageFilm) {
         this.likeDao = likeDao;
-        this.storageUser = storageUser;
         this.storageFilm = storageFilm;
 
     }
@@ -44,11 +41,6 @@ public class FilmService {
         }
         return storageFilm.updateFilm(film);
     }
-    /**
-     * Пользователь ставит лайк фильму
-     * @param filmId
-     * @param userId
-     */
     public void addLike(Long filmId, Long userId) {
         if (filmId <= 0 || userId <= 0) {
             throw new ObjectNotFoundException("id пользователя или id фильма указаны не верно. id должен быть больше 0");
@@ -62,11 +54,6 @@ public class FilmService {
         storageFilm.updateFilm(film);
     }
 
-    /**
-     * Удаление лайка
-     * @param filmId
-     * @param userId
-     */
     public void deleteLike(Long filmId, Long userId) {
         if (filmId <= 0 || userId <= 0) {
             throw new ObjectNotFoundException("id пользователя или id фильма указаны не верно. id должен быть больше 0");
@@ -77,33 +64,7 @@ public class FilmService {
         storageFilm.updateFilm(film);
     }
 
-    /**
-     * Получение фильмов по рейтингу, если count = 0, то первые 10 фильмов
-     * @param count
-     * @return
-     */
     public List<Film> getFirstCountFilms(Integer count) {
-//        List<Film> films = storageFilm.getFilms();
-//        films = films.stream()
-//                .sorted((p0, p1) -> {
-//            if((p0.getUserIds().size() != 0) && (p1.getUserIds().size() != 0)) {
-//                return p1.getUserIds().size() - (p0.getUserIds().size());
-//            } else if (p0.getUserIds().size() == 0) {
-//                return 1;
-//            } else if (p1.getUserIds().size() == 0) {
-//                return -1;
-//            }
-//            return 1;
-//        })
-//                .limit(count)
-//                .collect(Collectors.toList());
-//        likeDao.getPopularFilms()
-//        return films;
-return         storageFilm.getPopularFilms(count);
-//        return null;
+        return storageFilm.getPopularFilms(count);
     }
-
-//    public void setLikeDao(LikeDao likeDao) {
-//        this.likeDao = likeDao;
-//    }
 }

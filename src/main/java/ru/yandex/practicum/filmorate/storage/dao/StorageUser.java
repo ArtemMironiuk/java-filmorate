@@ -32,4 +32,19 @@ public interface StorageUser {
      * @return
      */
     User getUserId(Long id);
+
+    /**
+     * Получение списка пользователей, являющихся его друзьями
+     * @param id
+     * @return
+     */
+    List<User> getFriends(Long id);
+
+    /**
+     * Получение списка друзей, общих с другим пользователем.
+     * @param id
+     * @param otherId
+     * @return
+     */
+    List<User> getMutualFriends(Long id, Long otherId);
 }
