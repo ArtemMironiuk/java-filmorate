@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -29,6 +30,9 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User user(@PathVariable Long id) {
+        if (id == null || id < 0) {
+            throw new ObjectNotFoundException("не указан id");
+        }
         log.info("Получен запрос к эндпоинту: GET,http://localhost:8080/users/{id}");
         return userService.getUserId(id);
     }
@@ -41,6 +45,9 @@ public class UserController {
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
+        if (user.getId() == null || user.getId() < 0){
+            throw new ObjectNotFoundException("не указан id");
+        }
         log.info("Получен запрос к эндпоинту: PUT,http://localhost:8080/users");
         return userService.updateUser(user);
     }

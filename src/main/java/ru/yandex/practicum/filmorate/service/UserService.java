@@ -1,24 +1,25 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.StorageUser;
+import ru.yandex.practicum.filmorate.storage.dao.FriendsDao;
+import ru.yandex.practicum.filmorate.storage.dao.StorageUser;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     private final StorageUser storageUser;
+    private FriendsDao friendsDao;
 
     @Autowired
-    public UserService(StorageUser storageUser) {
+    public UserService(@Qualifier("userDbStorage") StorageUser storageUser, FriendsDao friendsDao) {
         this.storageUser = storageUser;
+        this.friendsDao = friendsDao;
     }
 
     public List<User> getUsers() {
@@ -36,76 +37,33 @@ public class UserService {
     public User updateUser(User user) {
         return storageUser.updateUser(user);
     }
-    /**
-     * Добавление в друзья.
-     * @param userId
-     * @param friendId
-     */
+
     public void addFriend(Long userId, Long friendId) {
         if (userId <= 0 || friendId <= 0) {
             throw new ObjectNotFoundException("id пользователя или id друга указаны не верно. id должен быть больше 0");
         }
-        User user = storageUser.getUserId(userId);
-        User friend = storageUser.getUserId(friendId);
-        user.getFriendIds().add(friend.getId());
-        friend.getFriendIds().add(user.getId());
+        friendsDao.addFriend(userId,friendId);
     }
 
-    /**
-     * Удаление из друзей.
-     * @param userId
-     * @param friendId
-     */
     public void deleteFriend(Long userId, Long friendId) {
         if (userId <= 0 || friendId <= 0) {
             throw new ObjectNotFoundException("id пользователя или id друга указаны не верно. id должен быть больше 0");
         }
-        User user = storageUser.getUserId(userId);
-        User friend = storageUser.getUserId(friendId);
-        user.getFriendIds().remove(friend.getId());
-        friend.getFriendIds().remove(user.getId());
+        friendsDao.deleteFriend(userId,friendId);
     }
 
-    /**
-     * Получение списка пользователей, являющихся его друзьями
-     * @param id
-     * @return
-     */
     public List<User> getFriends(Long id) {
         if (id <= 0) {
             throw new ObjectNotFoundException("id пользователя указан не верно. id должен быть больше 0");
         }
-        User user = storageUser.getUserId(id);
-        Set<Long> friends = user.getFriendIds();
-        if(friends.isEmpty()) {
-            throw new ObjectNotFoundException("У пользователя нет друзей");
-        }
-        List<User> users = new ArrayList<>();
-        for (Long friend : friends) {
-           users.add(storageUser.getUserId(friend));
-        }
-        return users;
+        return storageUser.getFriends(id);
     }
 
-    /**
-     * Получение списка друзей, общих с другим пользователем.
-     * @param id
-     * @param otherId
-     * @return
-     */
     public List<User> getMutualFriends(Long id, Long otherId) {
         if (id <= 0 || otherId <= 0) {
             throw new ObjectNotFoundException("id должен быть больше 0");
         }
-        final User user = storageUser.getUserId(id);
-        final User otherUser = storageUser.getUserId(otherId);
-        final Set<Long> friends = user.getFriendIds();
-        final Set<Long> otherFriends = otherUser.getFriendIds();
-
-        return friends.stream()
-                .filter(otherFriends::contains)
-                .map(userId -> storageUser.getUserId(userId) )
-                .collect(Collectors.toList());
+        return storageUser.getMutualFriends(id,otherId);
 
     }
 }

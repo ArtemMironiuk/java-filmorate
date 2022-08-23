@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.film;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -32,4 +32,11 @@ public interface StorageFilm {
      * @return
      */
     Film getFilmId(Long id);
+
+    /**
+     * Популярные фильмы
+     * @param count
+     * @return
+     */
+    List<Film> getPopularFilms(Integer count);
 }
